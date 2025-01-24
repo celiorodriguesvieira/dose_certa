@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scheduler_medical/constants.dart';
 import 'package:sizer/sizer.dart';
+import 'new_entry/new_entry_page.dart';
 
 void main() {
   runApp(const HomePage());
@@ -29,6 +30,12 @@ class HomePage extends StatelessWidget {
       ),
       floatingActionButton: InkResponse(
         onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const NewEntryPage(),
+            ),
+          );
           //go to new entry page
         },
         child: SizedBox(
@@ -36,6 +43,7 @@ class HomePage extends StatelessWidget {
           height: 9.h,
           child: Card(
             color: kPrimaryColor,
+            shape: BeveledRectangleBorder(),
             child: Icon(
               Icons.add_outlined,
               color: kScaffoldColor,
@@ -62,17 +70,17 @@ class TopContainer extends StatelessWidget {
             bottom: 1.h,
           ),
           child: Text(
-            'Sua saúde, sem erros. \nA dose certa na hora.',
+            'Sua saúde, sem erros.\nA dose certa na hora certa.',
             textAlign: TextAlign.start,
-            style: Theme.of(context).textTheme.headlineLarge,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),
         Container(
-          alignment: Alignment.topLeft,
+          alignment: Alignment.center,
           padding: EdgeInsets.only(bottom: 2.h),
           child: Text(
             'Bem-vindo para a dose certa!',
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.bodySmall,
           ),
         ),
         SizedBox(
@@ -83,7 +91,7 @@ class TopContainer extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 1.h),
           child: Text(
             '0',
-            style: Theme.of(context).textTheme.headlineLarge,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),
       ],

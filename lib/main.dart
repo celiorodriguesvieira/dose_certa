@@ -20,26 +20,60 @@ class MyApp extends StatelessWidget {
           title: 'DoseCerta',
           //theme
           theme: ThemeData.dark().copyWith(
-              primaryColor: kPrimaryColor,
-              scaffoldBackgroundColor: kScaffoldColor,
-              appBarTheme: const AppBarTheme(
+            primaryColor: kPrimaryColor,
+            scaffoldBackgroundColor: kScaffoldColor,
+            appBarTheme: AppBarTheme(
+                toolbarHeight: 7.h,
                 backgroundColor: kScaffoldColor,
                 elevation: 0,
-              ),
-              textTheme: TextTheme(
-                  headlineMedium: TextStyle(
-                      fontSize: 28.sp,
-                      color: kSecondaryColor,
-                      fontWeight: FontWeight.w500),
-                  headlineSmall: TextStyle(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.w600,
+                iconTheme: IconThemeData(
+                  color: kSecondaryColor,
+                  size: 20,
+                ),
+                titleTextStyle: GoogleFonts.mulish(
                     color: kTextColor,
-                  ),
-                  bodySmall: GoogleFonts.poppins(
-                    fontSize: 12.sp,
-                    color: kSubtitles,
-                  ))),
+                    fontWeight: FontWeight.w800,
+                    fontStyle: FontStyle.normal,
+                    fontSize: 16.sp)),
+            textTheme: TextTheme(
+              headlineLarge: TextStyle(
+                  fontSize: 28.sp,
+                  color: kSecondaryColor,
+                  fontWeight: FontWeight.w500),
+              headlineMedium: TextStyle(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.w600,
+                color: kTextColor,
+              ),
+              bodySmall: GoogleFonts.poppins(
+                fontSize: 12.sp,
+                color: kSubtitles,
+              ),
+              labelMedium: TextStyle(
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w500,
+                color: kTextColor,
+              ),
+            ),
+            inputDecorationTheme: const InputDecorationTheme(
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: kTextLightColor,
+                  width: 0.7,
+                ),
+              ),
+              border: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: kTextLightColor,
+                ),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: kPrimaryColor,
+                ),
+              ),
+            ),
+          ),
 
           home: const HomePage(),
         );

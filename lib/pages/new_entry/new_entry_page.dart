@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scheduler_medical/constants.dart';
 import 'package:sizer/sizer.dart';
 
@@ -75,24 +75,22 @@ class _NewEntryPageState extends State<NewEntryPage> {
             SizedBox(
               height: 2.h,
             ),
-            const PanelTitle(title: 'Medicine Type', isRequerid: false),
+            const PanelTitle(title: 'Medicamento', isRequerid: false),
             Row(
               children: [
                 Column(
                   children: [
                     Container(
-                      width: 20.w,
-                      height: 10.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(3.h),
-                        color: kOtherColor,
-                      ),
-                      child: SvgPicture(
-                        'assets/icons/pill.svg',
-                        height: 7.h,
-                        colorFilter: Colors.white,
-                      ),
-                    ),
+                        width: 20.w,
+                        height: 10.h,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(3.h),
+                            color: kOtherColor),
+                        child: Padding(
+                          padding: EdgeInsets.all(1.h),
+                          child:
+                              SvgPicture.asset('assets/icons/white/pills.svg'),
+                        ))
                   ],
                 ),
               ],

@@ -7,4 +7,4 @@ const Color kOtherColor = Color(0xFF59C1BD);
 const Color kErrorBorderColor = Color(0xFFE74C3C);
 const Color kTextLightColor = Color(0xFFC5BDCD);
 const Color kTextColor = Color(0xFF56485D);
-const Color kSubtitles = Color.fromARGB(84, 84, 84, 1000);
+const Color kSubtitles = Color(0xFF404040);

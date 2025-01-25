@@ -60,21 +60,11 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  assets:
-    - assets/icons/pill.svg
-    - assets/icons/bottle.svg
-    - assets/icons/syringe.svg
-    - assets/icons/tablet.svg
-
-    - assets/icons/white/bottle.svg
-    - assets/icons/white/pills.svg
-    - assets/icons/white/syringe.svg
-    - assets/icons/white/tablets.svg
-
-    - assets/icons/colors/medicine-svgrepo-com.svg
-    - assets/icons/colors/pills-svgrepo-com.svg
-    - assets/icons/colors/syringe-svgrepo-com.svg
-    - assets/icons/colors/tablets-svgrepo-com.svg
+assets:
+  - assets/icons/white/bottle.svg
+  - assets/icons/white/pills.svg
+  - assets/icons/white/syringe.svg
+  - assets/icons/white/tablets.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

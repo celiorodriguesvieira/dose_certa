@@ -77,27 +77,53 @@ class _NewEntryPageState extends State<NewEntryPage> {
             ),
             const PanelTitle(title: 'Medicamento', isRequerid: false),
             Row(
-              children: [
-                Column(
-                  children: [
-                    Container(
-                        width: 20.w,
-                        height: 10.h,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(3.h),
-                            color: kOtherColor),
-                        child: Padding(
-                          padding: EdgeInsets.all(1.h),
-                          child:
-                              SvgPicture.asset('assets/icons/white/pills.svg'),
-                        ))
-                  ],
-                ),
-              ],
+              children: [MedicineTypeColumn()],
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class MedicineTypeColumn extends StatelessWidget {
+  const MedicineTypeColumn({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: 20.w,
+          height: 10.h,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(3.h), color: kOtherColor),
+          child: Padding(
+            padding: EdgeInsets.all(1.h),
+            child: SvgPicture.asset('assets/icons/white/pills.svg'),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 1.h),
+          child: Container(
+            width: 20.w,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: kOtherColor,
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(1.h),
+              child: Center(
+                child: Text(
+                  'Pílula',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

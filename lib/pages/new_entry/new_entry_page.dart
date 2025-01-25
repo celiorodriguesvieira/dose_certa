@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scheduler_medical/constants.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../models/medicine_type.dart';
+
 class NewEntryPage extends StatefulWidget {
   const NewEntryPage({super.key});
 
@@ -76,8 +78,21 @@ class _NewEntryPageState extends State<NewEntryPage> {
               height: 2.h,
             ),
             const PanelTitle(title: 'Medicamento', isRequerid: false),
-            Row(
-              children: [MedicineTypeColumn()],
+            StreamBuilder(
+              builder: (context, snapshop) {
+                return Row(
+                  children: [
+                    MedicineTypeColumn(
+                      medicineType: MedicineType.bottle,
+                      name: 'Bottle',
+                      iconValue: 'assets/icons/white/bottle.svg',
+                      isSelected:
+                          snapshop.data == MedicineType.bottle ? true : false,
+                    ),
+                  ],
+                );
+              },
+              stream: null,
             ),
           ],
         ),
@@ -87,43 +102,63 @@ class _NewEntryPageState extends State<NewEntryPage> {
 }
 
 class MedicineTypeColumn extends StatelessWidget {
-  const MedicineTypeColumn({super.key});
+  const MedicineTypeColumn(
+      {super.key,
+      required this.medicineType,
+      required this.name,
+      required this.iconValue,
+      required this.isSelected});
+  final MedicineType medicineType;
+  final String name;
+  final String iconValue;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 20.w,
-          height: 10.h,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(3.h), color: kOtherColor),
-          child: Padding(
-            padding: EdgeInsets.all(1.h),
-            child: SvgPicture.asset('assets/icons/white/pills.svg'),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 1.h),
-          child: Container(
+    return GestureDetector(
+      onTap: () {
+        //select medicine type
+      },
+      child: Column(
+        children: [
+          Container(
             width: 20.w,
-            alignment: Alignment.center,
+            height: 10.h,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: kOtherColor,
-            ),
+                borderRadius: BorderRadius.circular(3.h),
+                color: isSelected ? kOtherColor : Colors.white),
             child: Padding(
               padding: EdgeInsets.all(1.h),
-              child: Center(
-                child: Text(
-                  'Pílula',
-                  style: Theme.of(context).textTheme.bodyMedium,
+              child: SvgPicture.asset(
+                iconValue,
+                color: isSelected ? Colors.white : kOtherColor,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 1.h),
+            child: Container(
+              width: 20.w,
+              height: 4.h,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: isSelected ? kOtherColor : Colors.transparent,
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(1.h),
+                child: Center(
+                  child: Text(
+                    name,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: isSelected ? Colors.white : kOtherColor),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

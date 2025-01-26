@@ -303,20 +303,24 @@ class MedicineTypeColumn extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         //select medicine type
+        //lets create a new block for selecting and new entry
       },
       child: Column(
         children: [
           Container(
             width: 20.w,
-            height: 10.h,
+            alignment: Alignment.center,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(3.h),
                 color: isSelected ? kOtherColor : Colors.white),
-            child: Padding(
-              padding: EdgeInsets.all(2.h),
-              child: SvgPicture.asset(
-                iconValue,
-                color: isSelected ? kErrorBorderColor : kOtherColor,
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
+                child: SvgPicture.asset(
+                  iconValue,
+                  height: 7.h,
+                  color: isSelected ? Colors.white : kOtherColor,
+                ),
               ),
             ),
           ),

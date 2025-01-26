@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
             primaryColor: kPrimaryColor,
             scaffoldBackgroundColor: kScaffoldColor,
             appBarTheme: AppBarTheme(
-                toolbarHeight: 7.h,
+                toolbarHeight: 5.h,
                 backgroundColor: kScaffoldColor,
                 elevation: 0,
                 iconTheme: IconThemeData(
@@ -45,17 +45,19 @@ class MyApp extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 color: kTextColor,
               ),
+              bodyMedium:
+                  GoogleFonts.poppins(fontSize: 10.sp, color: kPrimaryColor),
               bodySmall: GoogleFonts.poppins(
-                fontSize: 12.sp,
+                fontSize: 10.sp,
                 color: kSubtitles,
               ),
               labelMedium: TextStyle(
-                fontSize: 10.sp,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
                 color: kTextColor,
               ),
             ),
-            inputDecorationTheme: const InputDecorationTheme(
+            inputDecorationTheme: InputDecorationTheme(
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
                   color: kTextLightColor,
@@ -71,6 +73,20 @@ class MyApp extends StatelessWidget {
                 borderSide: BorderSide(
                   color: kPrimaryColor,
                 ),
+              ),
+            ),
+            timePickerTheme: TimePickerThemeData(
+              backgroundColor: kScaffoldColor,
+              hourMinuteColor: kPrimaryColor,
+              hourMinuteTextColor: kScaffoldColor,
+              dayPeriodColor: kTextColor,
+              dayPeriodTextColor: kScaffoldColor,
+              dialBackgroundColor: kPrimaryColor,
+              dialHandColor: kOtherColor,
+              dialTextColor: kScaffoldColor,
+              entryModeIconColor: kOtherColor,
+              dayPeriodTextStyle: GoogleFonts.aBeeZee(
+                fontSize: 7.sp,
               ),
             ),
           ),

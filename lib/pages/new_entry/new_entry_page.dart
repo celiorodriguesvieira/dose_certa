@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:scheduler_medical/constants.dart';
+import 'package:scheduler_medical/pages/new_entry/new_entry_block.dart';
 import 'package:sizer/sizer.dart';
 import '../../common/convert_time.dart';
 import '../../models/medicine_type.dart';
@@ -16,6 +18,7 @@ class _NewEntryPageState extends State<NewEntryPage> {
   late TextEditingController nameController;
   late TextEditingController dosageController;
 
+  late NewEntryBlock _newEntryBlock;
   late GlobalKey<ScaffoldState> _scaffoldKey;
 
   @override
@@ -23,6 +26,7 @@ class _NewEntryPageState extends State<NewEntryPage> {
     super.dispose();
     nameController.dispose();
     dosageController.dispose();
+    _newEntryBlock.dispose();
   }
 
   @override
@@ -30,7 +34,7 @@ class _NewEntryPageState extends State<NewEntryPage> {
     super.initState();
     nameController = TextEditingController();
     dosageController = TextEditingController();
-
+    _newEntryBlock = NewEntryBlock();
     _scaffoldKey = GlobalKey<ScaffoldState>();
   }
 
@@ -42,130 +46,138 @@ class _NewEntryPageState extends State<NewEntryPage> {
       appBar: AppBar(
         title: const Text('Adicionar novo'),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(1.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const PanelTitle(
-              title: 'Medicamento:',
-              isRequerid: true,
-            ),
-            TextFormField(
-              maxLength: 15,
-              textCapitalization: TextCapitalization.words,
-              decoration: const InputDecoration(border: UnderlineInputBorder()),
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: kOtherColor),
-            ),
-            PanelTitle(
-              title: 'Dose (mg ou ml).',
-              isRequerid: false,
-            ),
-            TextFormField(
-              maxLength: 4,
-              textCapitalization: TextCapitalization.words,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(border: UnderlineInputBorder()),
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: kOtherColor),
-            ),
-            SizedBox(
-              height: 1.h,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const PanelTitle(
-                    title: 'Escolha o tipo de medicamento', isRequerid: false),
-              ],
-            ),
-            // SizedBox(
-            //   height: 2.h,
-            // ),
-            Padding(
-              padding: EdgeInsets.only(top: 1.h),
-              child: StreamBuilder(
-                //block
-                //stream ,
-                builder: (context, snapshop) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      MedicineTypeColumn(
-                        medicineType: MedicineType.bottle,
-                        name: 'Frasco',
-                        iconValue: 'assets/icons/white/bottle.svg',
-                        isSelected:
-                            snapshop.data == MedicineType.bottle ? true : false,
-                      ),
-                      MedicineTypeColumn(
-                        medicineType: MedicineType.pill,
-                        name: 'Pílula',
-                        iconValue: 'assets/icons/pill.svg',
-                        isSelected:
-                            snapshop.data == MedicineType.pill ? true : false,
-                      ),
-                      MedicineTypeColumn(
-                        medicineType: MedicineType.syringe,
-                        name: 'Seringa',
-                        iconValue: 'assets/icons/white/syringe.svg',
-                        isSelected: snapshop.data == MedicineType.syringe
-                            ? true
-                            : false,
-                      ),
-                      MedicineTypeColumn(
-                        medicineType: MedicineType.tablet,
-                        name: 'Comprimido',
-                        iconValue: 'assets/icons/white/tablets.svg',
-                        isSelected:
-                            snapshop.data == MedicineType.tablet ? true : false,
-                      ),
-                    ],
-                  );
-                },
-                stream: null,
+      body: Provider<NewEntryBlock>.value(
+        value: _newEntryBlock,
+        child: Padding(
+          padding: EdgeInsets.all(1.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const PanelTitle(
+                title: 'Medicamento:',
+                isRequerid: true,
               ),
-            ),
-            const PanelTitle(
-                title: 'Selecione o intervalo de horas:', isRequerid: true),
-            const IntervalSection(),
-            const PanelTitle(title: 'Começar às', isRequerid: true),
-            const SelectTime(),
-            SizedBox(
-              height: 1.h,
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 7.w, right: 7.w),
-              child: SizedBox(
-                width: 80.w,
-                height: 7.h,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: kPrimaryColor,
-                    shape: const StadiumBorder(),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Confirme',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall!
-                          .copyWith(color: kScaffoldColor),
-                    ),
-                  ),
-                  onPressed: () {
-                    //add medicine
-                    //some validations
+              TextFormField(
+                maxLength: 15,
+                textCapitalization: TextCapitalization.words,
+                decoration:
+                    const InputDecoration(border: UnderlineInputBorder()),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: kOtherColor),
+              ),
+              PanelTitle(
+                title: 'Dose (mg ou ml).',
+                isRequerid: false,
+              ),
+              TextFormField(
+                maxLength: 4,
+                textCapitalization: TextCapitalization.words,
+                keyboardType: TextInputType.number,
+                decoration:
+                    const InputDecoration(border: UnderlineInputBorder()),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: kOtherColor),
+              ),
+              SizedBox(
+                height: 1.h,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const PanelTitle(
+                      title: 'Escolha o tipo de medicamento',
+                      isRequerid: false),
+                ],
+              ),
+              // SizedBox(
+              //   height: 2.h,
+              // ),
+              Padding(
+                padding: EdgeInsets.only(top: 1.h),
+                child: StreamBuilder<MedicineType>(
+                  //block
+                  builder: (context, snapshop) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        MedicineTypeColumn(
+                          medicineType: MedicineType.bottle,
+                          name: 'Frasco',
+                          iconValue: 'assets/icons/white/bottle.svg',
+                          isSelected: snapshop.data == MedicineType.bottle
+                              ? true
+                              : false,
+                        ),
+                        MedicineTypeColumn(
+                          medicineType: MedicineType.pill,
+                          name: 'Pílula',
+                          iconValue: 'assets/icons/pill.svg',
+                          isSelected:
+                              snapshop.data == MedicineType.pill ? true : false,
+                        ),
+                        MedicineTypeColumn(
+                          medicineType: MedicineType.syringe,
+                          name: 'Seringa',
+                          iconValue: 'assets/icons/white/syringe.svg',
+                          isSelected: snapshop.data == MedicineType.syringe
+                              ? true
+                              : false,
+                        ),
+                        MedicineTypeColumn(
+                          medicineType: MedicineType.tablet,
+                          name: 'Comprimido',
+                          iconValue: 'assets/icons/white/tablets.svg',
+                          isSelected: snapshop.data == MedicineType.tablet
+                              ? true
+                              : false,
+                        ),
+                      ],
+                    );
                   },
+                  stream: _newEntryBlock.selectedMedicineType,
                 ),
               ),
-            ),
-          ],
+              const PanelTitle(
+                  title: 'Selecione o intervalo de horas:', isRequerid: true),
+              const IntervalSection(),
+              const PanelTitle(title: 'Começar às', isRequerid: true),
+              const SelectTime(),
+              SizedBox(
+                height: 1.h,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 7.w, right: 7.w),
+                child: SizedBox(
+                  width: 80.w,
+                  height: 7.h,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: kPrimaryColor,
+                      shape: const StadiumBorder(),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Confirme',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .copyWith(color: kScaffoldColor),
+                      ),
+                    ),
+                    onPressed: () {
+                      //add medicine
+                      //some validations
+                      //go to success screen
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -300,8 +312,10 @@ class MedicineTypeColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final NewEntryBlock newEntryBlock = Provider.of<NewEntryBlock>(context);
     return GestureDetector(
       onTap: () {
+        newEntryBlock.updateSelectedMedicine(medicineType);
         //select medicine type
         //lets create a new block for selecting and new entry
       },

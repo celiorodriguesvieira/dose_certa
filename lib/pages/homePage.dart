@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scheduler_medical/constants.dart';
 import 'package:sizer/sizer.dart';
 import 'new_entry/new_entry_page.dart';
@@ -104,11 +105,71 @@ class BottomContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        'Medicamentos Agendados',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.headlineMedium,
+    //later we will use condition to show the save data;
+    // return Center(
+    //   child: Text(
+    //     'Medicamentos Agendados',
+    //     textAlign: TextAlign.center,
+    //     style: Theme.of(context).textTheme.headlineMedium,
+    //   ),
+    // );
+    return GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+        itemCount: 4,
+        itemBuilder: (context, index) {
+          return MedicineCard();
+        });
+  }
+}
+
+class MedicineCard extends StatelessWidget {
+  const MedicineCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      highlightColor: Colors.white,
+      splashColor: Colors.grey,
+      onTap: () {
+        // go to details activity animation, later
+      },
+      child: Container(
+        padding: EdgeInsets.all(2.w),
+        //I could adjust space here
+        margin: EdgeInsets.all(1.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(2.h),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Spacer(),
+            SvgPicture.asset(
+              'assets/icons/bottle.svg',
+              height: 7.h,
+              color: kOtherColor,
+            ),
+            const Spacer(),
+            //hero tag animation, later
+            Text(
+              'Calpol',
+              overflow: TextOverflow.fade,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            //time interval data with condition, later
+            Text(
+              overflow: TextOverflow.fade,
+              textAlign: TextAlign.center,
+              'Cada 8 horas',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scheduler_medical/constants.dart';
+import 'package:scheduler_medical/global_bloc.dart';
+import 'package:scheduler_medical/pages/medicine_details/medicine_details.dart';
 import 'package:scheduler_medical/pages/new_entry/new_entry_block.dart';
 import 'package:sizer/sizer.dart';
 import '../../common/convert_time.dart';
@@ -40,6 +42,7 @@ class _NewEntryPageState extends State<NewEntryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalBloc globalBloc = Provider.of<GlobalBloc>(context);
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
@@ -172,6 +175,13 @@ class _NewEntryPageState extends State<NewEntryPage> {
                       //add medicine
                       //some validations
                       //go to success screen
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MedicineDetails(),
+                        ),
+                      );
                     },
                   ),
                 ),

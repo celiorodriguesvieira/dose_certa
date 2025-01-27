@@ -1,7 +1,9 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:scheduler_medical/pages/new_entry/new_entry_block.dart';
+import 'package:scheduler_medical/global_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'pages/homePage.dart';
 import 'constants.dart';
@@ -20,18 +22,18 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
 
-  NewEntryBlock? newEntryBlock;
+  GlobalBloc? globalBloc;
 
   @override
   void initState() {
-    newEntryBlock = NewEntryBlock();
+    globalBloc = GlobalBloc();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Provider<NewEntryBlock>.value(
-      value: newEntryBlock!,
+    return Provider<GlobalBloc>.value(
+      value: globalBloc!,
       child: Sizer(
         builder: (context, orientation, deviceType) {
           return MaterialApp(
@@ -79,6 +81,11 @@ class _MyAppState extends State<MyApp> {
                   fontWeight: FontWeight.w500,
                   color: kTextColor,
                 ),
+                labelSmall: GoogleFonts.poppins(
+                    fontSize: 16.sp,
+                    color: kTextColor,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.0),
               ),
               inputDecorationTheme: InputDecorationTheme(
                 enabledBorder: UnderlineInputBorder(

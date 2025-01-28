@@ -37,6 +37,7 @@ dependencies:
   rxdart: ^0.27.0
   provider:
   shared_preferences:
+  flare_flutter:
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +70,7 @@ flutter:
     - assets/icons/tablet.svg
     - assets/icons/syringe.svg
     - assets/icons/pill.svg
+    - assets/animations/success_check.flr
 # An image asset can refer to one or more resolution-specific "variants", see
 # https://flutter.dev/to/resolution-aware-images
 

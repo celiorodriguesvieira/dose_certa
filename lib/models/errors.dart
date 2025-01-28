@@ -7,3 +7,5 @@ enum EntryError {
   startTime,
   none,
 }
+
+//Saving the data via shared preferences its working;

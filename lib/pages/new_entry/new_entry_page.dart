@@ -1,13 +1,16 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scheduler_medical/constants.dart';
 import 'package:scheduler_medical/global_bloc.dart';
-import 'package:scheduler_medical/pages/medicine_details/medicine_details.dart';
+import 'package:scheduler_medical/models/medicine.dart';
 import 'package:scheduler_medical/pages/new_entry/new_entry_block.dart';
+import 'package:scheduler_medical/pages/success_screen.dart/success_screen.dart';
 import 'package:sizer/sizer.dart';
 import '../../common/convert_time.dart';
 import '../../models/medicine_type.dart';
+import '../../models/errors.dart';
 
 class NewEntryPage extends StatefulWidget {
   const NewEntryPage({super.key});
@@ -38,6 +41,7 @@ class _NewEntryPageState extends State<NewEntryPage> {
     dosageController = TextEditingController();
     _newEntryBlock = NewEntryBlock();
     _scaffoldKey = GlobalKey<ScaffoldState>();
+    initializeErrorListen();
   }
 
   @override
@@ -175,13 +179,67 @@ class _NewEntryPageState extends State<NewEntryPage> {
                       //add medicine
                       //some validations
                       //go to success screen
+                      String? medicineName;
+                      int? dosage;
+
+                      if (nameController.text == '') {
+                        _newEntryBlock.submitError(EntryError.nameNull);
+                        return;
+                      }
+                      if (nameController.text != '') {
+                        medicineName = nameController.text;
+                      }
+                      if (dosageController.text != '') {
+                        dosage = 0;
+                      }
+                      if (dosageController.text != '') {
+                        dosage = int.parse(dosageController.text);
+                      }
+                      for (var medicine in globalBloc.medicineList$!.value) {
+                        if (medicineName == medicine.medicineName) {
+                          _newEntryBlock.submitError(EntryError.nameDuplicate);
+                          return;
+                        }
+                      }
+                      if (_newEntryBlock.selectIntervals!.value == 0) {
+                        _newEntryBlock.submitError(EntryError.interval);
+                        return;
+                      }
+                      if (_newEntryBlock.selectedTimeOfDay$!.value == 'None') {
+                        _newEntryBlock.submitError(EntryError.startTime);
+                        return;
+                      }
+                      String medicineType = _newEntryBlock
+                          .selectedMedicineType!.value
+                          .toString()
+                          .substring(13);
+
+                      int interval = _newEntryBlock.selectIntervals!.value;
+                      String startTime =
+                          _newEntryBlock.selectedTimeOfDay$!.value;
+
+                      List<int> intIds =
+                          makeIDs(24 / _newEntryBlock.selectIntervals!.value);
+                      List<String> notificationIDs =
+                          intIds.map((i) => i.toString()).toList();
+
+                      Medicine newEntryMedicine = Medicine(
+                          notificationIDs: notificationIDs,
+                          medicineName: medicineName,
+                          dosage: dosage,
+                          medicineType: medicineType,
+                          interval: interval,
+                          startTime: startTime);
+
+                      //update medicine list via global;
+                      globalBloc.updateMedicineList(newEntryMedicine);
+                      //schedule notification;
+                      //go to success screen:0
 
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MedicineDetails(),
-                        ),
-                      );
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SuccessScreen()));
                     },
                   ),
                 ),
@@ -191,6 +249,49 @@ class _NewEntryPageState extends State<NewEntryPage> {
         ),
       ),
     );
+  }
+
+  void initializeErrorListen() {
+    _newEntryBlock.errorState$!.listen((EntryError error) {
+      switch (error) {
+        case EntryError.nameNull:
+          displayError("'Por favor entre com o nome do medicamento.'");
+          break;
+        case EntryError.nameDuplicate:
+          displayError("Nome do medicamento já existe.");
+          break;
+        case EntryError.dosage:
+          displayError("Por favor entre com a dose requerida.");
+          break;
+        case EntryError.interval:
+          displayError("'Por favor selecione o intervalo do lembrete.");
+          break;
+        case EntryError.startTime:
+          displayError("Por favor selecione inicio do lembrete");
+          break;
+        default:
+          displayError("Erro desconhecido.");
+      }
+    });
+  }
+
+  void displayError(String error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: kOtherColor,
+        content: Text(error),
+        duration: const Duration(milliseconds: 2000),
+      ),
+    );
+  }
+
+  List<int> makeIDs(double n) {
+    var rng = Random();
+    List<int> ids = [];
+    for (int i = 0; i < n; i++) {
+      ids.add(rng.nextInt(10000000000));
+    }
+    return ids;
   }
 }
 
@@ -262,6 +363,8 @@ class _IntervalSectionState extends State<IntervalSection> {
   var _selected = 0;
   @override
   Widget build(BuildContext context) {
+    final NewEntryBlock newEntryBlock = Provider.of<NewEntryBlock>(context);
+
     return Padding(
       padding: EdgeInsets.only(top: 1.h),
       child: Row(
@@ -295,6 +398,7 @@ class _IntervalSectionState extends State<IntervalSection> {
             onChanged: (newVal) {
               setState(() {
                 _selected = newVal!;
+                newEntryBlock.updateInterval(newVal);
               });
             },
           ),

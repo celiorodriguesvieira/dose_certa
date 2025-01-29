@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:scheduler_medical/constants.dart';
+import 'package:scheduler_medical/global_bloc.dart';
+import 'package:scheduler_medical/models/medicine.dart';
 import 'package:sizer/sizer.dart';
 
 class MedicineDetails extends StatefulWidget {
-  const MedicineDetails({super.key});
+  const MedicineDetails(this.medicine, {super.key});
+  final Medicine medicine;
 
   @override
   State<MedicineDetails> createState() => _MedicineDetailsState();
@@ -13,6 +17,8 @@ class MedicineDetails extends StatefulWidget {
 class _MedicineDetailsState extends State<MedicineDetails> {
   @override
   Widget build(BuildContext context) {
+    final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalhes'),
@@ -21,8 +27,8 @@ class _MedicineDetailsState extends State<MedicineDetails> {
         padding: EdgeInsets.all(2.h),
         child: Column(
           children: [
-            MainSection(),
-            ExtendedSection(),
+            MainSection(medicine: widget.medicine),
+            ExtendedSection(medicine: widget.medicine),
             Spacer(),
             SizedBox(
               width: 100.w,
@@ -34,7 +40,7 @@ class _MedicineDetailsState extends State<MedicineDetails> {
                 ),
                 onPressed: () {
                   // open alert dialog box, + global block later
-                  openAlertBox(context);
+                  openAlertBox(context, _globalBloc);
                 },
                 child: Text(
                   'Deletar',
@@ -51,7 +57,9 @@ class _MedicineDetailsState extends State<MedicineDetails> {
     );
   }
 
-  openAlertBox(BuildContext context) {
+  //deleting a medicine from memory
+
+  openAlertBox(BuildContext context, GlobalBloc _globalBloc) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -85,6 +93,8 @@ class _MedicineDetailsState extends State<MedicineDetails> {
               TextButton(
                 onPressed: () {
                   //global to delete medicine, later
+                  _globalBloc.removeMedicine(widget.medicine);
+                  Navigator.popUntil(context, ModalRoute.withName('/'));
                 },
                 child: Text(
                   'OK',
@@ -101,26 +111,89 @@ class _MedicineDetailsState extends State<MedicineDetails> {
 }
 
 class MainSection extends StatelessWidget {
-  const MainSection({super.key});
+  const MainSection({super.key, this.medicine});
+  final Medicine? medicine;
+
+  //lets try another one
+
+  Hero makeIcon(double size) {
+    if (medicine!.medicineType == 'Bottle') {
+      return Hero(
+        tag: medicine!.medicineName! + medicine!.medicineType!,
+        child: SvgPicture.asset(
+          'assets/icons/bottle.svg',
+          color: kOtherColor,
+          height: 7.h,
+        ),
+      );
+    } else if (medicine!.medicineType == 'Pill') {
+      return Hero(
+        tag: medicine!.medicineName! + medicine!.medicineType!,
+        child: SvgPicture.asset(
+          'assets/icons/pill.svg',
+          color: kOtherColor,
+          height: 7.h,
+        ),
+      );
+    } else if (medicine!.medicineType == 'Syringe') {
+      return Hero(
+        tag: medicine!.medicineName! + medicine!.medicineType!,
+        child: SvgPicture.asset(
+          'assets/icons/syringe.svg',
+          color: kOtherColor,
+          height: 7.h,
+        ),
+      );
+    } else if (medicine!.medicineType == 'Tablet') {
+      return Hero(
+        tag: medicine!.medicineName! + medicine!.medicineType!,
+        child: SvgPicture.asset(
+          '/assets/icons/tablet.svg',
+          color: kOtherColor,
+          height: 7.h,
+        ),
+      );
+    }
+    // incase of no medicine type icon selection
+    return Hero(
+      tag: medicine!.medicineName! + medicine!.medicineType!,
+      child: Icon(
+        Icons.error,
+        color: kOtherColor,
+        size: size,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        SvgPicture.asset(
-          'assets/icons/bottle.svg',
-          height: 7.h,
-          color: kOtherColor,
-        ),
+        //lets try another one
+        //okz same here, the same problem
+
+        makeIcon(7.h),
         SizedBox(
           width: 2.w,
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            MainInfoTab(fieldTitle: 'Medicamento', fieldInfo: 'Catapol'),
-            MainInfoTab(fieldTitle: 'Dosage', fieldInfo: '500 mg')
+          children: [
+            Hero(
+              tag: medicine!.medicineName!,
+              child: Material(
+                color: Colors.transparent,
+                child: MainInfoTab(
+                    fieldTitle: 'Medicamento',
+                    fieldInfo: medicine!.medicineName!),
+              ),
+            ),
+            MainInfoTab(
+                fieldTitle: 'Dosage',
+                fieldInfo: medicine!.dosage == 0
+                    ? 'Não identificado'
+                    : '${medicine!.dosage} mg')
           ],
         ),
       ],
@@ -164,24 +237,29 @@ class MainInfoTab extends StatelessWidget {
 }
 
 class ExtendedSection extends StatelessWidget {
-  const ExtendedSection({super.key});
+  const ExtendedSection({super.key, this.medicine});
+  final Medicine? medicine;
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       shrinkWrap: true,
-      children: const [
+      children: [
         ExtendedInfoTab(
           fieldTitle: 'Medicamento',
-          fieldInfo: 'Pílula',
+          fieldInfo: medicine!.medicineType! == 'None'
+              ? 'Não especificado.'
+              : medicine!.medicineType!,
         ),
         ExtendedInfoTab(
           fieldTitle: 'Intervalo das doses',
-          fieldInfo: 'Cada 8 horas | 3 vezes ao dia.',
+          fieldInfo:
+              'Cada ${medicine!.dosage}horas | ${medicine!.interval == 24 ? "uma vez ao dia" : "${(24 / medicine!.interval!).floor()}"} vezes ao dia.',
         ),
         ExtendedInfoTab(
           fieldTitle: 'Começar:',
-          fieldInfo: '01:09',
+          fieldInfo:
+              '${medicine!.startTime![0]}${medicine!.startTime![1]}:${medicine!.startTime![2]}${medicine!.startTime![3]}',
         ),
       ],
     );

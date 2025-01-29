@@ -18,7 +18,7 @@ class NewEntryBloc {
 
   NewEntryBloc() {
     _selectMedicineType$ =
-        BehaviorSubject<MedicineType>.seeded(MedicineType.none);
+        BehaviorSubject<MedicineType>.seeded(MedicineType.None);
 
     _selectedTimeOfDay$ = BehaviorSubject<String>.seeded('none');
     _selectedInterval$ = BehaviorSubject<int>.seeded(0);
@@ -47,7 +47,7 @@ class NewEntryBloc {
     MedicineType _tempType = _selectMedicineType$!.value;
 
     if (type == _tempType) {
-      _selectMedicineType$!.add(MedicineType.none);
+      _selectMedicineType$!.add(MedicineType.None);
     } else {
       _selectMedicineType$!.add(type);
     }

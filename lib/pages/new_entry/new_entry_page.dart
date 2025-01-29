@@ -113,33 +113,33 @@ class _NewEntryPageState extends State<NewEntryPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         MedicineTypeColumn(
-                          medicineType: MedicineType.bottle,
+                          medicineType: MedicineType.Bottle,
                           name: 'Frasco',
                           iconValue: 'assets/icons/white/bottle.svg',
-                          isSelected: snapshop.data == MedicineType.bottle
+                          isSelected: snapshop.data == MedicineType.Bottle
                               ? true
                               : false,
                         ),
                         MedicineTypeColumn(
-                          medicineType: MedicineType.pill,
+                          medicineType: MedicineType.Pill,
                           name: 'Pílula',
                           iconValue: 'assets/icons/pill.svg',
                           isSelected:
-                              snapshop.data == MedicineType.pill ? true : false,
+                              snapshop.data == MedicineType.Pill ? true : false,
                         ),
                         MedicineTypeColumn(
-                          medicineType: MedicineType.syringe,
+                          medicineType: MedicineType.Syringe,
                           name: 'Seringa',
                           iconValue: 'assets/icons/white/syringe.svg',
-                          isSelected: snapshop.data == MedicineType.syringe
+                          isSelected: snapshop.data == MedicineType.Syringe
                               ? true
                               : false,
                         ),
                         MedicineTypeColumn(
-                          medicineType: MedicineType.tablet,
+                          medicineType: MedicineType.Tablet,
                           name: 'Comprimido',
                           iconValue: 'assets/icons/white/tablets.svg',
-                          isSelected: snapshop.data == MedicineType.tablet
+                          isSelected: snapshop.data == MedicineType.Tablet
                               ? true
                               : false,
                         ),
@@ -312,6 +312,9 @@ class _SelectTimeState extends State<SelectTime> {
   bool _clicked = false;
 
   Future<TimeOfDay?> _selectTime() async {
+    final NewEntryBloc newEntryBloc =
+        Provider.of<NewEntryBloc>(context, listen: false);
+
     final TimeOfDay? picked =
         await showTimePicker(context: context, initialTime: _time);
 
@@ -321,6 +324,8 @@ class _SelectTimeState extends State<SelectTime> {
         _clicked = true;
 
         //I'm going to update later using provider
+        newEntryBloc.updateTime(convertTime(_time.hour.toString()) +
+            convertTime(_time.minute.toString()));
       });
     }
     return picked ?? _time;

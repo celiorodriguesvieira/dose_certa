@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert'; // Para lidar com o JSON
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart'; // Pacote para animações Lottie
 

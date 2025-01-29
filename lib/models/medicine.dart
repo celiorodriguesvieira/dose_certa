@@ -22,7 +22,7 @@ class Medicine {
   String get getStartTime => startTime!;
   List<dynamic> get getIds => notificationIDs!;
 
-  Map<String, dynamic> toJSON() {
+  Map<String, dynamic> toJson() {
     return {
       'ids': notificationIDs,
       'name': medicineName,

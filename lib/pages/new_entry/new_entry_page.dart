@@ -22,8 +22,7 @@ class NewEntryPage extends StatefulWidget {
 class _NewEntryPageState extends State<NewEntryPage> {
   late TextEditingController nameController;
   late TextEditingController dosageController;
-
-  late NewEntryBlock _newEntryBlock;
+  late NewEntryBloc _newEntryBloc;
   late GlobalKey<ScaffoldState> _scaffoldKey;
 
   @override
@@ -31,7 +30,7 @@ class _NewEntryPageState extends State<NewEntryPage> {
     super.dispose();
     nameController.dispose();
     dosageController.dispose();
-    _newEntryBlock.dispose();
+    _newEntryBloc.dispose();
   }
 
   @override
@@ -39,7 +38,7 @@ class _NewEntryPageState extends State<NewEntryPage> {
     super.initState();
     nameController = TextEditingController();
     dosageController = TextEditingController();
-    _newEntryBlock = NewEntryBlock();
+    _newEntryBloc = NewEntryBloc();
     _scaffoldKey = GlobalKey<ScaffoldState>();
     initializeErrorListen();
   }
@@ -53,8 +52,8 @@ class _NewEntryPageState extends State<NewEntryPage> {
       appBar: AppBar(
         title: const Text('Adicionar novo'),
       ),
-      body: Provider<NewEntryBlock>.value(
-        value: _newEntryBlock,
+      body: Provider<NewEntryBloc>.value(
+        value: _newEntryBloc,
         child: Padding(
           padding: EdgeInsets.all(1.h),
           child: Column(
@@ -65,6 +64,7 @@ class _NewEntryPageState extends State<NewEntryPage> {
                 isRequerid: true,
               ),
               TextFormField(
+                controller: nameController,
                 maxLength: 15,
                 textCapitalization: TextCapitalization.words,
                 decoration:
@@ -79,6 +79,7 @@ class _NewEntryPageState extends State<NewEntryPage> {
                 isRequerid: false,
               ),
               TextFormField(
+                controller: dosageController,
                 maxLength: 4,
                 textCapitalization: TextCapitalization.words,
                 keyboardType: TextInputType.number,
@@ -145,7 +146,7 @@ class _NewEntryPageState extends State<NewEntryPage> {
                       ],
                     );
                   },
-                  stream: _newEntryBlock.selectedMedicineType,
+                  stream: _newEntryBloc.selectedMedicineType,
                 ),
               ),
               const PanelTitle(
@@ -168,7 +169,7 @@ class _NewEntryPageState extends State<NewEntryPage> {
                     ),
                     child: Center(
                       child: Text(
-                        'Confirme',
+                        'Confirm',
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall!
@@ -182,44 +183,48 @@ class _NewEntryPageState extends State<NewEntryPage> {
                       String? medicineName;
                       int? dosage;
 
-                      if (nameController.text == '') {
-                        _newEntryBlock.submitError(EntryError.nameNull);
+                      //Medicinename
+
+                      print("celio ${nameController.text}");
+                      if (nameController.text == "") {
+                        _newEntryBloc.submitError(EntryError.nameNull);
                         return;
                       }
-                      if (nameController.text != '') {
+                      if (nameController.text != "") {
                         medicineName = nameController.text;
                       }
-                      if (dosageController.text != '') {
+                      //dosage
+                      if (dosageController.text == "") {
                         dosage = 0;
                       }
-                      if (dosageController.text != '') {
+                      if (dosageController.text != "") {
                         dosage = int.parse(dosageController.text);
                       }
                       for (var medicine in globalBloc.medicineList$!.value) {
                         if (medicineName == medicine.medicineName) {
-                          _newEntryBlock.submitError(EntryError.nameDuplicate);
+                          _newEntryBloc.submitError(EntryError.nameDuplicate);
                           return;
                         }
                       }
-                      if (_newEntryBlock.selectIntervals!.value == 0) {
-                        _newEntryBlock.submitError(EntryError.interval);
+                      if (_newEntryBloc.selectIntervals!.value == 0) {
+                        _newEntryBloc.submitError(EntryError.interval);
                         return;
                       }
-                      if (_newEntryBlock.selectedTimeOfDay$!.value == 'None') {
-                        _newEntryBlock.submitError(EntryError.startTime);
+                      if (_newEntryBloc.selectedTimeOfDay$!.value == 'None') {
+                        _newEntryBloc.submitError(EntryError.startTime);
                         return;
                       }
-                      String medicineType = _newEntryBlock
+                      String medicineType = _newEntryBloc
                           .selectedMedicineType!.value
                           .toString()
                           .substring(13);
 
-                      int interval = _newEntryBlock.selectIntervals!.value;
+                      int interval = _newEntryBloc.selectIntervals!.value;
                       String startTime =
-                          _newEntryBlock.selectedTimeOfDay$!.value;
+                          _newEntryBloc.selectedTimeOfDay$!.value;
 
                       List<int> intIds =
-                          makeIDs(24 / _newEntryBlock.selectIntervals!.value);
+                          makeIDs(24 / _newEntryBloc.selectIntervals!.value);
                       List<String> notificationIDs =
                           intIds.map((i) => i.toString()).toList();
 
@@ -252,7 +257,7 @@ class _NewEntryPageState extends State<NewEntryPage> {
   }
 
   void initializeErrorListen() {
-    _newEntryBlock.errorState$!.listen((EntryError error) {
+    _newEntryBloc.errorState$!.listen((EntryError error) {
       switch (error) {
         case EntryError.nameNull:
           displayError("'Por favor entre com o nome do medicamento.'");
@@ -289,7 +294,7 @@ class _NewEntryPageState extends State<NewEntryPage> {
     var rng = Random();
     List<int> ids = [];
     for (int i = 0; i < n; i++) {
-      ids.add(rng.nextInt(10000000000));
+      ids.add(rng.nextInt(1000000000));
     }
     return ids;
   }
@@ -363,7 +368,7 @@ class _IntervalSectionState extends State<IntervalSection> {
   var _selected = 0;
   @override
   Widget build(BuildContext context) {
-    final NewEntryBlock newEntryBlock = Provider.of<NewEntryBlock>(context);
+    final NewEntryBloc newEntryBloc = Provider.of<NewEntryBloc>(context);
 
     return Padding(
       padding: EdgeInsets.only(top: 1.h),
@@ -398,7 +403,7 @@ class _IntervalSectionState extends State<IntervalSection> {
             onChanged: (newVal) {
               setState(() {
                 _selected = newVal!;
-                newEntryBlock.updateInterval(newVal);
+                newEntryBloc.updateInterval(newVal);
               });
             },
           ),
@@ -426,10 +431,10 @@ class MedicineTypeColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final NewEntryBlock newEntryBlock = Provider.of<NewEntryBlock>(context);
+    final NewEntryBloc newEntryBloc = Provider.of<NewEntryBloc>(context);
     return GestureDetector(
       onTap: () {
-        newEntryBlock.updateSelectedMedicine(medicineType);
+        newEntryBloc.updateSelectedMedicine(medicineType);
         //select medicine type
         //lets create a new block for selecting and new entry
       },
@@ -497,7 +502,7 @@ class PanelTitle extends StatelessWidget {
               style: Theme.of(context).textTheme.labelMedium,
             ),
             TextSpan(
-              text: isRequerid ? '*' : '',
+              text: isRequerid ? ' *' : '',
               style: Theme.of(context).textTheme.labelMedium!.copyWith(
                     color: kPrimaryColor,
                   ),

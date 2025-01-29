@@ -17,7 +17,7 @@ class GlobalBloc {
     blocList.add(newMedicine);
     _medicineList$!.add(blocList);
 
-    Map<String, dynamic> tempMap = newMedicine.toJSON();
+    Map<String, dynamic> tempMap = newMedicine.toJson();
     SharedPreferences? sharedUser = await SharedPreferences.getInstance();
     String newMedicineJson = jsonEncode(tempMap);
     List<String> medicineJsonList = [];

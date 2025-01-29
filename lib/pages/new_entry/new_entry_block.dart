@@ -2,7 +2,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:scheduler_medical/models/medicine_type.dart';
 import '../../models/errors.dart';
 
-class NewEntryBlock {
+class NewEntryBloc {
   BehaviorSubject<MedicineType>? _selectMedicineType$;
   ValueStream<MedicineType>? get selectedMedicineType =>
       _selectMedicineType$!.stream;
@@ -16,7 +16,7 @@ class NewEntryBlock {
   BehaviorSubject<EntryError>? _errorState$;
   BehaviorSubject<EntryError>? get errorState$ => _errorState$;
 
-  NewEntryBlock() {
+  NewEntryBloc() {
     _selectMedicineType$ =
         BehaviorSubject<MedicineType>.seeded(MedicineType.none);
 
